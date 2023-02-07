@@ -23,7 +23,7 @@ export default function Signup(){
     //test
     const createAccount=()=> {
         fetch("http://localhost:3000", {
-            method: 'GET', // or 'PUT'
+            method: 'GET',
         })
             .then((response) => response.json())
             .then((data) => {
