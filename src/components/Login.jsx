@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import Input from "./Input";
+import { useNavigate} from 'react-router-dom';
+
 
 const fields=loginFields;
 let fieldsState = {};
@@ -10,6 +12,8 @@ fields.forEach(field=>fieldsState[field.id]='');
 export default function Login(){
     const [loginState,setLoginState]=useState(fieldsState);
 
+    const navigate = useNavigate();
+
     const handleChange=(e)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
     }
@@ -17,12 +21,32 @@ export default function Login(){
     const handleSubmit=(e)=>{
         e.preventDefault();
         authenticateUser();
+        console.log(loginState);
     }
+
 
     //Handle Login API Integration here
     const authenticateUser = () =>{
+        fetch("http://localhost:3000/users/login", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: loginState.username,
+                password: loginState.password,
+                role:loginState.role,
+            })
+        }).then(async (response) => {
 
+            if(response.ok){
+                localStorage.setItem('token',(await response.json()).jwt);
+                navigate('/location');
+            }else{
+                alert("Your account does not exist or username/password is not correct.")
+            }
+
+        })
     }
+
 
     return(
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
