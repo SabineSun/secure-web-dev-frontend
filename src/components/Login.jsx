@@ -33,7 +33,6 @@ export default function Login(){
             body: JSON.stringify({
                 username: loginState.username,
                 password: loginState.password,
-                role:loginState.role,
             })
         }).then(async (response) => {
 
