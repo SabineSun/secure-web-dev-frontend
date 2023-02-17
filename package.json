@@ -1,5 +1,5 @@
 {
-  "proxy": "http://localhost:3000/",
+  "proxy": "http://secure-web-dev.fly.dev/",
   "name": "secure-web-dev-frontend",
   "private": true,
   "version": "0.0.0",

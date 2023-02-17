@@ -5,13 +5,14 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 
 
+
 export default function Location(){
     const [locations, setLocations] = useState([]);
 
     let token=localStorage.getItem('token');
 
     const fetchData = () => {
-        fetch("http://localhost:3000/locations",{
+        fetch("http://secure-web-dev.fly.dev/locations",{
             method:'GET',
             headers: {Authorization: "Bearer " + token},
         }).then((response)=> response.json())
@@ -24,9 +25,18 @@ export default function Location(){
         fetchData();
     },[])
 
+    /*const deleteData = (location) =>{
+        fetch("http://secure-web-dev.fly.dev/locations/" + location._id, {
+            method:'delete',
+            headers: {Authorization: "Bearer " + token},
+        }).then(response => response.json())
+    }*/
 
+    /*const deleteTest = (location) =>{
+        console.log(location.filmName);
+    }*/
 
-   return (
+    return (
             <div className="flex flex-col">
                 <div className="overflow-x-auto">
                     <div className=" w-full inline-block align-middle">
@@ -65,21 +75,25 @@ export default function Location(){
                                         <tr key={location._id}>
                                             <th   className="px-6 py-1 pb-0 text-xs font-bold text-left font-light">
                                                 {location.filmName}
+
                                             </th>
                                             <th></th>
 
-                                            <th className="py-1 pb-0  justify-center items-center font-light">
+                                            <th className=" py-1 pb-0  justify-center items-center">
                                                 <button className="bg-transparent py-0 px-0">
                                                     <PencilSquareIcon className="w-5 h-5"/>
                                                 </button>
 
                                             </th>
                                             <th className="py-1 px-9 pb-0  font-light">
-                                                <button className="bg-transparent py-0 px-0">
+
+
+                                                <button type={"button"} className="bg-transparent py-0 px-0">
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
                                             </th>
-                                        </tr>)
+                                        </tr>
+                                    )
                                 }
                                 </tbody>
                             </table>

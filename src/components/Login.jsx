@@ -27,7 +27,7 @@ export default function Login(){
 
     //Handle Login API Integration here
     const authenticateUser = () =>{
-        fetch("http://localhost:3000/users/login", {
+        fetch("http://secure-web-dev.fly.dev/users/login", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
