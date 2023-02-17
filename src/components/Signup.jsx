@@ -28,7 +28,7 @@ export default function Signup(){
     }
 
     const createAccount=()=> {
-        fetch("http://secure-web-dev.fly.dev/users/register", {
+        fetch("https://secure-web-dev.fly.dev/users/register", {
             method: 'POST',
             redirect: 'follow',
             headers: { 'Content-Type': 'application/json' },

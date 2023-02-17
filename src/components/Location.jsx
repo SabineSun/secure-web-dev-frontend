@@ -12,7 +12,7 @@ export default function Location(){
     let token=localStorage.getItem('token');
 
     const fetchData = () => {
-        fetch("http://secure-web-dev.fly.dev/locations",{
+        fetch("https://secure-web-dev.fly.dev/locations",{
             method:'GET',
             headers: {Authorization: "Bearer " + token},
         }).then((response)=> response.json())
@@ -26,7 +26,7 @@ export default function Location(){
     },[])
 
     /*const deleteData = (location) =>{
-        fetch("http://secure-web-dev.fly.dev/locations/" + location._id, {
+        fetch("https://secure-web-dev.fly.dev/locations/" + location._id, {
             method:'delete',
             headers: {Authorization: "Bearer " + token},
         }).then(response => response.json())
