@@ -30,11 +30,19 @@ export default function Location(){
         })
             .then(response => response.json())
             .then(data => {
-                // Update the state of the component to remove the deleted row
                 const updatedTableData = locations.filter(location => location._id !== id);
                 setLocations( updatedTableData);
             })
     }
+
+    const [rowSelected, setRowSelected] = useState([null]);
+    const [showModal, setShowModal] = useState([false]);
+
+    const handleRowClick = (rowSelected) => {
+        setRowSelected(rowSelected);
+        setShowModal(true);
+    };
+
 
     return (
             <div className="flex flex-col">
@@ -59,7 +67,6 @@ export default function Location(){
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        Edit
                                     </th>
                                     <th
                                         scope="col"
@@ -73,26 +80,26 @@ export default function Location(){
                                 {
                                     locations.map((location) =>
 
-                                        <tr key={location._id}>
+                                        <tr key={location._id}
+                                            className="hover:bg-gray-100 cursor-pointer"
+                                            onClick={()=>{
+                                                handleRowClick(location);
+                                            }}>
                                             <th   className="px-6 py-1 pb-0 text-xs font-bold text-left font-light">
                                                 {location.filmName}
-
                                             </th>
                                             <th></th>
-
                                             <th className=" py-1 pb-0  justify-center items-center">
-                                                <button className="bg-transparent py-0 px-0">
-                                                    <PencilSquareIcon className="w-5 h-5"/>
-                                                </button>
 
                                             </th>
                                             <th className="py-1 px-9 pb-0  font-light">
-
-
                                                 <button
                                                     type={"button"}
                                                     className="bg-transparent py-0 px-0"
-                                                    onClick={() => deleteData(location._id)}
+                                                    onClick={() => {
+                                                        deleteData(location._id);
+                                                        }
+                                                    }
                                                 >
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
@@ -104,6 +111,58 @@ export default function Location(){
                                 }
                                 </tbody>
                             </table>
+                            {showModal ? (
+                                <>
+                                    <div
+                                        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                                    >
+                                        <div className="w-96 absolute top-50 left-4 pt-2 pr-2">
+                                            <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                                                <div className="flex items-start justify-between p-4 border-b border-solid border-slate-200 rounded-t">
+                                                    <h3 className="font-semibold">
+                                                        {rowSelected.filmName}
+                                                    </h3>
+                                                    <button
+                                                        type={"button"}
+                                                        className="bg-transparent py-0 px-0"
+                                                        onClick={() =>
+                                                            deleteData(location._id)
+                                                        }
+                                                    >
+                                                        <PencilSquareIcon className="w-5 h-5"/>
+                                                    </button>
+                                                </div>
+                                                <div className="relative p-6 flex-auto">
+                                                    <p className="text-sm text-slate-500 text-left overflow-scroll	">
+                                                        {"film type : " + rowSelected.filmType}<br/>
+                                                        {"film producer name : " + rowSelected.filmProducerName}<br/>
+                                                        {"year : " + rowSelected.year}<br/>
+                                                        {"start date : " + rowSelected.startDate}<br/>
+                                                        {"end date : " + rowSelected.endDate}<br/>
+                                                        {"film director name : " + rowSelected.filmDirectorName}<br/>
+                                                        {"adress : " + rowSelected.address}<br/>
+                                                        {"district : " + rowSelected.district}<br/>
+                                                        {"source location id : " + rowSelected.sourceLocationId}<br/>
+                                                    </p>
+                                                </div>
+                                                <div className="flex items-center justify-end p-0.5 border-t border-solid border-slate-200 rounded-b">
+                                                    <button
+                                                        className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setShowModal(false);
+                                                        }}
+                                                    >
+                                                        Close
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div className="opacity-0 fixed inset-0 z-40 bg-black"></div>
+                                </>
+                            ) : null}
                         </div>
                     </div>
                 </div>
