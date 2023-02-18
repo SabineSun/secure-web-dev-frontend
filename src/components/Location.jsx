@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
-
-
-
-
 export default function Location(){
     const [locations, setLocations] = useState([]);
 
     let token=localStorage.getItem('token');
 
     const fetchData = () => {
-        fetch("https://secure-web-dev.fly.dev/locations",{
+        //fetch("https://secure-web-dev.fly.dev/locations",{
+        fetch("http://localhost:3000/locations",{
             method:'GET',
             headers: {Authorization: "Bearer " + token},
         }).then((response)=> response.json())
@@ -25,16 +22,19 @@ export default function Location(){
         fetchData();
     },[])
 
-    /*const deleteData = (location) =>{
-        fetch("https://secure-web-dev.fly.dev/locations/" + location._id, {
-            method:'delete',
-            headers: {Authorization: "Bearer " + token},
-        }).then(response => response.json())
-    }*/
 
-    /*const deleteTest = (location) =>{
-        console.log(location.filmName);
-    }*/
+    const deleteData = (id) => {
+        fetch("http://localhost:3000/locations/" + id, {
+            method:'delete',
+            headers:{Authorization:"Bearer " + token},
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Update the state of the component to remove the deleted row
+                const updatedTableData = locations.filter(location => location._id !== id);
+                setLocations( updatedTableData);
+            })
+    }
 
     return (
             <div className="flex flex-col">
@@ -72,6 +72,7 @@ export default function Location(){
                                 <tbody className="divide-y divide-gray-200">
                                 {
                                     locations.map((location) =>
+
                                         <tr key={location._id}>
                                             <th   className="px-6 py-1 pb-0 text-xs font-bold text-left font-light">
                                                 {location.filmName}
@@ -88,11 +89,17 @@ export default function Location(){
                                             <th className="py-1 px-9 pb-0  font-light">
 
 
-                                                <button type={"button"} className="bg-transparent py-0 px-0">
+                                                <button
+                                                    type={"button"}
+                                                    className="bg-transparent py-0 px-0"
+                                                    onClick={() => deleteData(location._id)}
+                                                >
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
                                             </th>
                                         </tr>
+
+
                                     )
                                 }
                                 </tbody>
