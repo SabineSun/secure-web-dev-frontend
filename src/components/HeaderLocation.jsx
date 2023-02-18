@@ -10,7 +10,7 @@ export default function HeaderLocation({
 
     return(
         <>
-            <div className="absolute top-3 left-5 h-16 w-16">
+            <div className="flex items-center justify-center">
                <h1>Welcome </h1>
             </div>
             <div className="absolute top-0 right-5 h-16 w-16">
