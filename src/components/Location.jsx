@@ -37,12 +37,12 @@ export default function Location(){
 
     const [rowSelected, setRowSelected] = useState([null]);
     const [showModal, setShowModal] = useState([false]);
+    const [isDeleted, setIsDeleted] = useState([false]);
 
     const handleRowClick = (rowSelected) => {
         setRowSelected(rowSelected);
         setShowModal(true);
     };
-
 
     return (
             <div className="flex flex-col">
@@ -51,7 +51,7 @@ export default function Location(){
                         <div className="overflow-hidden border rounded-lg">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
-                                <tr >
+                                <tr>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
@@ -72,7 +72,6 @@ export default function Location(){
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        Delete
                                     </th>
                                 </tr>
                                 </thead>
@@ -80,38 +79,40 @@ export default function Location(){
                                 {
                                     locations.map((location) =>
 
-                                        <tr key={location._id}
-                                            className="hover:bg-gray-100 cursor-pointer"
+                                    <tr key={location._id}
+                                            className="hover:bg-gray-100 cursor-pointer h-8"
                                             onClick={()=>{
                                                 handleRowClick(location);
-                                            }}>
-                                            <th   className="px-6 py-1 pb-0 text-xs font-bold text-left font-light">
+                                            }}
+                                        >
+                                            <th className="px-9 py-1 text-xs  text-left font-light">
                                                 {location.filmName}
                                             </th>
                                             <th></th>
                                             <th className=" py-1 pb-0  justify-center items-center">
 
                                             </th>
+
                                             <th className="py-1 px-9 pb-0  font-light">
                                                 <button
                                                     type={"button"}
                                                     className="bg-transparent py-0 px-0"
                                                     onClick={() => {
                                                         deleteData(location._id);
+                                                        setIsDeleted(true);
                                                         }
                                                     }
                                                 >
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
                                             </th>
+
                                         </tr>
-
-
                                     )
                                 }
                                 </tbody>
                             </table>
-                            {showModal ? (
+                            {showModal===true ? (
                                 <>
                                     <div
                                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -121,6 +122,9 @@ export default function Location(){
                                                 <div className="flex items-start justify-between p-4 border-b border-solid border-slate-200 rounded-t">
                                                     <h3 className="font-semibold">
                                                         {rowSelected.filmName}
+                                                        {isDeleted===true?(
+                                                         " is deleted"
+                                                        ):null}
                                                     </h3>
                                                     <button
                                                         type={"button"}
@@ -151,6 +155,7 @@ export default function Location(){
                                                         type="button"
                                                         onClick={() => {
                                                             setShowModal(false);
+                                                            setIsDeleted(false);
                                                         }}
                                                     >
                                                         Close
