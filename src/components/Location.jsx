@@ -3,7 +3,10 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {PlusIcon} from "@heroicons/react/24/outline";
 import {useNavigate} from 'react-router-dom';
-import Signup from "./Signup.jsx";
+import {ArrowLeftIcon} from "@heroicons/react/24/outline";
+import {ArrowRightIcon} from "@heroicons/react/24/outline";
+
+
 
 
 export default function Location(){
@@ -12,6 +15,9 @@ export default function Location(){
     const [showModal, setShowModal] = useState([false]);
     const [isDeleted, setIsDeleted] = useState([false]);
     const [showEdit, setShowEdit] = useState([false]);
+    const [offset, setOffset] = useState(0);
+    const [limit, setLimit] = useState(20);
+
 
     let token=localStorage.getItem('token');
     const navigate = useNavigate();
@@ -32,10 +38,18 @@ export default function Location(){
             })
     }
 
+    const Pagination = async () => {
+        const response = await fetch(`http://localhost:3000/locations?limit=${limit}&offset=${offset}`,
+            { method:'GET',
+            headers: {Authorization: "Bearer " + token},} );
+        const data = await response.json();
+        setLocations(data);
+    };
+
     useEffect(() => {
         fetchData();
-    },[])
-
+        Pagination();
+    }, [limit, offset]);
 
     const deleteData = (id) => {
         fetch("https://secure-web-dev.fly.dev/locations/" +id,{
@@ -61,11 +75,39 @@ export default function Location(){
         setShowEdit(true);
     }
 
+    function handlePrevClick() {
+        setOffset(Math.max(0, offset - limit));
+        console.log(offset);
+    }
+
+    function handleNextClick() {
+        setOffset(offset + limit);
+        console.log(offset);
+    }
+
+
+
     return (
+        <>
+        <div className="absolute top-6  ">
+            <button onClick={handlePrevClick}
+                    disabled={offset === 0}
+                    className="bg-transparent p-0">
+                <ArrowLeftIcon className="w-5 h-5 "/>
+            </button>
+        </div>
+        <div className= "absolute top-6 m-10">
+            <button onClick={handleNextClick} className="bg-transparent p-0">
+                <ArrowRightIcon className="w-5 h-5"/>
+            </button>
+        </div>
             <div className="flex flex-col">
-                <div className="overflow-x-auto">
-                    <div className=" w-full inline-block align-middle">
+                <div className="overflow-x-auto ">
+
+                    <div className=" w-full inline-block align-middle ">
+
                         <div className="overflow-hidden border rounded-lg">
+
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                 <tr>
@@ -93,8 +135,8 @@ export default function Location(){
                                             type={"button"}
                                             className="bg-transparent py-0 px-0"
                                             onClick={() => {
-                                                <Signup></Signup>
-                                            }
+                                                console.log("test");
+                                                }
                                             }
                                         >
                                             <PlusIcon className="w-5 h-5"/>
@@ -128,11 +170,13 @@ export default function Location(){
                                                     onClick={() => {
                                                         deleteData(location._id);
                                                         setIsDeleted(true);
+                                                        window.location.reload();
                                                         }
                                                     }
                                                 >
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
+
                                             </th>
 
                                         </tr>
@@ -311,9 +355,12 @@ export default function Location(){
 
 
                         </div>
+
                     </div>
+
                 </div>
             </div>
+        </>
     );
 
 
