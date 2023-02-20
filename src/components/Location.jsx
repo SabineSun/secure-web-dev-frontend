@@ -25,7 +25,7 @@ export default function Location(){
     const navigate = useNavigate();
 
     const authenticateUser = () =>{
-        fetch("https://secure-web-dev.fly.dev/users/login", {
+        fetch("https://secure-web-dev.fly.dev/users/me", {
         //fetch("http://localhost:3000/users/me",{
             method: 'GET',
             headers: {Authorization: "Bearer " + token},
