@@ -18,7 +18,6 @@ export default function Signup(){
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        console.log(signupState);
         if(signupState.password===signupState.confirmPassword){
             createAccount();
         }else{
@@ -29,6 +28,8 @@ export default function Signup(){
 
     const createAccount=()=> {
         fetch("https://secure-web-dev.fly.dev/users/register", {
+        //    fetch("http://localhost:3000/users/register",{
+
             method: 'POST',
             redirect: 'follow',
             headers: { 'Content-Type': 'application/json' },

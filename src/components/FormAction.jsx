@@ -16,12 +16,7 @@ export default function FormAction({
                     >
                         {text}
                     </button>:<></>
-
             }
-
-
-
-
         </>
     )
 }

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {PlusIcon} from "@heroicons/react/24/outline";
+import {useNavigate} from 'react-router-dom';
+import Signup from "./Signup.jsx";
+
 
 export default function Location(){
     const [locations, setLocations] = useState([]);
@@ -11,15 +14,21 @@ export default function Location(){
     const [showEdit, setShowEdit] = useState([false]);
 
     let token=localStorage.getItem('token');
+    const navigate = useNavigate();
+
 
     const fetchData = () => {
-        //fetch("https://secure-web-dev.fly.dev/locations",{
-        fetch("http://localhost:3000/locations",{
+        fetch("https://secure-web-dev.fly.dev/locations",{
+        //fetch("http://localhost:3000/locations",{
             method:'GET',
             headers: {Authorization: "Bearer " + token},
         }).then((response)=> response.json())
             .then((data)=>{
                 setLocations(data);
+            })
+            .catch(error => {
+                alert("Your are not connected. You will be redirected to the login page.")
+                navigate('/');
             })
     }
 
@@ -29,7 +38,9 @@ export default function Location(){
 
 
     const deleteData = (id) => {
-        fetch("http://localhost:3000/locations/" + id, {
+        fetch("https://secure-web-dev.fly.dev/locations/" +id,{
+
+         //   fetch("http://localhost:3000/locations/" + id, {
             method:'delete',
             headers:{Authorization:"Bearer " + token},
         })
@@ -39,8 +50,6 @@ export default function Location(){
                 setLocations( updatedTableData);
             })
     }
-
-
 
     const handleRowClick = (rowSelected) => {
         setRowSelected(rowSelected);
@@ -80,7 +89,17 @@ export default function Location(){
                                         scope="col"
                                         className="px-9 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        <PlusIcon className="w-5 h-5"/>
+                                        <button
+                                            type={"button"}
+                                            className="bg-transparent py-0 px-0"
+                                            onClick={() => {
+                                                <Signup></Signup>
+                                            }
+                                            }
+                                        >
+                                            <PlusIcon className="w-5 h-5"/>
+                                        </button>
+
                                     </th>
                                 </tr>
                                 </thead>
@@ -135,19 +154,22 @@ export default function Location(){
                                                          " is deleted"
                                                         ):null}
                                                     </h3>
-                                                    <button
-                                                        type={"button"}
-                                                        className="bg-transparent py-0 px-0"
-                                                        onClick={() =>
-                                                            handleRowEditClick(rowSelected)
-                                                        }
-                                                    >
-                                                        {showEdit===false
-                                                            ? <PencilSquareIcon className="w-5 h-5"/>
-                                                            :null
-                                                        }
+                                                    {isDeleted===false
+                                                        ? <button
+                                                            type={"button"}
+                                                            className="bg-transparent py-0 px-0"
+                                                            onClick={() =>
+                                                                handleRowEditClick(rowSelected)
+                                                            }
+                                                        >
+                                                            {showEdit===false
+                                                                ? <PencilSquareIcon className="w-5 h-5"/>
+                                                                :null
+                                                            }
 
-                                                    </button>
+                                                        </button>
+                                                        :null}
+
                                                 </div>
                                                 {showEdit === true
                                                     ? <div>
@@ -274,7 +296,7 @@ export default function Location(){
                                                     >
                                                         {showEdit===true
                                                             ? "Submit"
-                                                            : "Cancel"
+                                                            : "Close"
                                                         }
                                                     </button>
 
