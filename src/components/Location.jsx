@@ -17,10 +17,23 @@ export default function Location(){
     const [showEdit, setShowEdit] = useState([false]);
     const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(20);
+    const [me, setMe] = useState([]);
+
 
 
     let token=localStorage.getItem('token');
     const navigate = useNavigate();
+
+    const authenticateUser = () =>{
+        fetch("https://secure-web-dev.fly.dev/users/login", {
+        //fetch("http://localhost:3000/users/me",{
+            method: 'GET',
+            headers: {Authorization: "Bearer " + token},
+        }).then((response)=> response.json())
+            .then((data)=>{
+                setMe(data);
+            })
+    }
 
 
     const fetchData = () => {
@@ -49,6 +62,7 @@ export default function Location(){
     useEffect(() => {
         fetchData();
         Pagination();
+        authenticateUser();
     }, [limit, offset]);
 
     const deleteData = (id) => {
@@ -77,12 +91,10 @@ export default function Location(){
 
     function handlePrevClick() {
         setOffset(Math.max(0, offset - limit));
-        console.log(offset);
     }
 
     function handleNextClick() {
         setOffset(offset + limit);
-        console.log(offset);
     }
 
 
@@ -131,16 +143,20 @@ export default function Location(){
                                         scope="col"
                                         className="px-9 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        <button
-                                            type={"button"}
-                                            className="bg-transparent py-0 px-0"
-                                            onClick={() => {
-                                                console.log("test");
+                                        {me.role==='admin'
+                                        ?<button
+                                                type={"button"}
+                                                className="bg-transparent py-0 px-0"
+                                                onClick={() => {
+                                                    console.log("test");
                                                 }
-                                            }
-                                        >
-                                            <PlusIcon className="w-5 h-5"/>
-                                        </button>
+                                                }
+                                            >
+                                                <PlusIcon className="w-5 h-5"/>
+                                            </button>
+                                            :null
+                                        }
+
 
                                     </th>
                                 </tr>
@@ -164,6 +180,8 @@ export default function Location(){
                                             </th>
 
                                             <th className="py-1 px-9 pb-0  font-light">
+
+                                                {me.role==='admin'?
                                                 <button
                                                     type={"button"}
                                                     className="bg-transparent py-0 px-0"
@@ -176,6 +194,7 @@ export default function Location(){
                                                 >
                                                     <TrashIcon className="w-5 h-5"/>
                                                 </button>
+                                                    :null}
 
                                             </th>
 
@@ -206,7 +225,7 @@ export default function Location(){
                                                                 handleRowEditClick(rowSelected)
                                                             }
                                                         >
-                                                            {showEdit===false
+                                                            {showEdit===false && me.role==='admin'
                                                                 ? <PencilSquareIcon className="w-5 h-5"/>
                                                                 :null
                                                             }
